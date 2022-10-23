@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // register
 router.post("/register", async (req, res, next) => {
@@ -48,10 +49,22 @@ router.post("/login", async (req, res, next) => {
       return res.status(401).json("password incorrect");
     }
 
-    // do not include password in response when send back to client
+    // create jwt accesstoken that expires in 3 days
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+        isAdmin: user.isAdmin,
+      },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "3d" }
+    );
+
+    // remove password and add accessToken to response back to client
     const { password, ...everythingButPassword } = user._doc;
 
-    res.status(200).json(everythingButPassword);
+    res
+      .status(200)
+      .json({ ...everythingButPassword, accessToken: accessToken });
   } catch (err) {
     res.status(500).json(err.message);
   }
