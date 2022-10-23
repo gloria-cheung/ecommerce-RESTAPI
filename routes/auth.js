@@ -29,25 +29,29 @@ router.post("/register", async (req, res, next) => {
 
 // login
 router.post("/login", async (req, res, next) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
+  if (!req.body.username || !req.body.password) {
     res.status(400).json("missing credentials");
   }
 
   try {
     // check if user exist and then compare password with hashed version
-    const user = await User.findOne({ username: username });
+    const user = await User.findOne({ username: req.body.username });
     if (!user) {
       return res.status(401).json("username does not exist");
     }
 
-    const validPassword = await bcrypt.compare(password, user.password);
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
     if (!validPassword) {
       return res.status(401).json("password incorrect");
     }
 
-    res.status(200).json(user);
+    // do not include password in response when send back to client
+    const { password, ...everythingButPassword } = user._doc;
+
+    res.status(200).json(everythingButPassword);
   } catch (err) {
     res.status(500).json(err.message);
   }
