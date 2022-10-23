@@ -39,12 +39,12 @@ router.post("/login", async (req, res, next) => {
     // check if user exist and then compare password with hashed version
     const user = await User.findOne({ username: username });
     if (!user) {
-      return res.status(400).json("username does not exist");
+      return res.status(401).json("username does not exist");
     }
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      return res.status(400).json("password incorrect");
+      return res.status(401).json("password incorrect");
     }
 
     res.status(200).json(user);
