@@ -20,7 +20,7 @@ app.use(helmet());
 app.use(morgan("common"));
 
 //routes mounted
-app.use("/api/user", userRoute);
+app.use("/api/users", userRoute);
 
 app.listen(1234, () => {
   console.log("Listening on PORT 1234");
