@@ -26,6 +26,31 @@ router.post("/register", async (req, res, next) => {
     res.status(500).json(err.message);
   }
 });
+
 // login
+router.post("/login", async (req, res, next) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    res.status(400).json("missing credentials");
+  }
+
+  try {
+    // check if user exist and then compare password with hashed version
+    const user = await User.findOne({ username: username });
+    if (!user) {
+      return res.status(400).json("username does not exist");
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      return res.status(400).json("password incorrect");
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
 
 module.exports = router;
