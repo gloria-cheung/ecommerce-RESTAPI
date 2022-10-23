@@ -4,24 +4,24 @@ const bcrypt = require("bcrypt");
 
 // register
 router.post("/register", async (req, res, next) => {
-  const { username, password, email } = req.body;
-
-  if (!username || !password || !email) {
+  if (!req.body.username || !req.body.password || !req.body.email) {
     return res.status(400).json("missing credentials");
   }
 
   try {
     //hash password, then create user and save to db
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
     const newUser = new User({
-      username: username,
-      email: email,
+      username: req.body.username,
+      email: req.body.email,
       password: hashedPassword,
     });
     const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+
+    const { password, ...everythingButPassword } = savedUser._doc;
+    res.status(201).json(everythingButPassword);
   } catch (err) {
     res.status(500).json(err.message);
   }
