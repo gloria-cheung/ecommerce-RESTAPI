@@ -34,4 +34,18 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res, next) => {
   }
 });
 
+//delete order
+router.delete("/:id", verifyTokenAndAdmin, async (req, res, next) => {
+  if (!req.params.id) {
+    return res.status(400).json("missing orderID");
+  }
+
+  try {
+    await Order.findByIdAndDelete(req.params.id);
+    res.status(200).json("order deleted");
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
 module.exports = router;
