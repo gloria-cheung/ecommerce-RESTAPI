@@ -229,6 +229,97 @@ An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB that he
     {"_id":"6356b7e1d16e7bdbcbd8be7d","title":"pants5","desc":"cool pants","img":"www.pantsimg.com","categories":["bottoms","men"],"createdAt":"2022-10-24T16:05:53.142Z","updatedAt":"2022-10-24T16:05:53.142Z","__v":0},
     ...]
 
+## Create a New Cart
+
+### Request
+
+`POST /api/carts/`
+
+    curl -d '{"userId":"63569bf5ba972d1879576264"}' -H "token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNTY5YmY1YmE5NzJkMTg3OTU3NjI2NCIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2NjY2MzEzNjEsImV4cCI6MTY2Njg5MDU2MX0.LYz4aK4ippqU9GmDowpSChuUsVbbIBq_ZbJcuzM2AMo" -H "Content-Type: application/json" -X POST "http://localhost:1234/api/carts/"
+
+### Response
+
+    HTTP/1.1 201 Created
+    Date: Mon, 24 Oct 2022 16:12:41 GMT
+    Status: 201 Created
+    Connection: close
+    Content-Type: application/json
+
+    {"userId":"63569bf5ba972d1879576264","_id":"6356c7af8a4c82ce897f5ad5","products":[],"createdAt":"2022-10-24T17:13:19.251Z","updatedAt":"2022-10-24T17:13:19.251Z","__v":0}
+
+## Update Cart
+
+### Request
+
+`PUT /api/carts/:id`
+
+    curl -d '{"products":[{"productId":"6356b52fb4fda0fe2be02f8a", "qty": 1}]}' -H "token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNTY5YzA2YmE5NzJkMTg3OTU3NjI2NiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2NjYyMDQzNCwiZXhwIjoxNjY2ODc5NjM0fQ.WUkFRIvU8vJ1zrAKtsxBBvY8tPg_B2tmMJJkPLwoFMg" -H "Content-Type: application/json" -X PUT "http://localhost:1234/api/carts/6356c7af8a4c82ce897f5ad5"
+
+### Response
+
+    HTTP/1.1 200 OK
+    Date: Mon, 24 Oct 2022 16:12:41 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+
+    {"_id":"6356c7af8a4c82ce897f5ad5","userId":"63569bf5ba972d1879576264","products":[{"productId":"6356b52fb4fda0fe2be02f8a","quantity":1,"_id":"6356c9928a4c82ce897f5ada"}],"createdAt":"2022-10-24T17:13:19.251Z","updatedAt":"2022-10-24T17:21:22.584Z","__v":0}
+
+## Delete Cart
+
+### Request
+
+`DELETE /api/carts/:id`
+
+    curl -H "token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNTY5YzA2YmE5NzJkMTg3OTU3NjI2NiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2NjYyMDQzNCwiZXhwIjoxNjY2ODc5NjM0fQ.WUkFRIvU8vJ1zrAKtsxBBvY8tPg_B2tmMJJkPLwoFMg" -H "Content-Type: application/json" -X DELETE "http://localhost:1234/api/carts/6356c7af8a4c82ce897f5ad5"
+
+### Response
+
+    HTTP/1.1 200 OK
+    Date: Thu, 15 Oct 2022 16:26:24 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+
+    "cart deleted"
+
+## Get Cart for User
+
+### Request
+
+`GET /api/carts/find/:userId`
+
+    curl -H "token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNTY5YzA2YmE5NzJkMTg3OTU3NjI2NiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2NjYyMDQzNCwiZXhwIjoxNjY2ODc5NjM0fQ.WUkFRIvU8vJ1zrAKtsxBBvY8tPg_B2tmMJJkPLwoFMg" -H "Content-Type: application/json" -X GET "http://localhost:1234/api/carts/find/63569bf5ba972d1879576264"
+
+### Response
+
+    HTTP/1.1 200 OK
+    Date: Mon, 24 Oct 2022 14:06:45 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+
+    {"_id":"6356c7af8a4c82ce897f5ad5","userId":"63569bf5ba972d1879576264","products":[{"productId":"6356b52fb4fda0fe2be02f8a","quantity":1,"_id":"6356c9928a4c82ce897f5ada"}],"createdAt":"2022-10-24T17:13:19.251Z","updatedAt":"2022-10-24T17:21:22.584Z","__v":0}
+
+## Get All Carts (admin)
+
+### Request
+
+`GET /api/carts/`
+
+    curl -H "token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNTY5YzA2YmE5NzJkMTg3OTU3NjI2NiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2NjYyMDQzNCwiZXhwIjoxNjY2ODc5NjM0fQ.WUkFRIvU8vJ1zrAKtsxBBvY8tPg_B2tmMJJkPLwoFMg" -H "Content-Type: application/json" -X GET "http://localhost:1234/api/carts/"
+
+### Response
+
+    HTTP/1.1 200 OK
+    Date: Mon, 24 Oct 2022 16:26:24 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+
+    [{"_id":"6356c7af8a4c82ce897f5ad5","userId":"63569bf5ba972d1879576264","products":[{"productId":"6356b52fb4fda0fe2be02f8a","quantity":1,"_id":"6356c9928a4c82ce897f5ada"}],"createdAt":"2022-10-24T17:13:19.251Z","updatedAt":"2022-10-24T17:21:22.584Z","__v":0},
+    ...]
+
 ## Project Stack
 
 - Back-End: Express, Node.js, MongoDB, Mongoose
