@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Order = require("../models/Order");
-const { verifyToken, verifyTokenAndAdmin } = require("./verifyToken");
+const { verifyToken, verifyTokenAndAdmin, verifyTokenAndAuth } = require("./verifyToken");
 
 //create order
 router.post("/", verifyToken, async (req, res, next) => {
@@ -12,7 +12,7 @@ router.post("/", verifyToken, async (req, res, next) => {
   }
 });
 
-//update order
+//update order (admin)
 router.put("/:id", verifyTokenAndAdmin, async (req, res, next) => {
   if (!req.params.id) {
     return res.status(400).json("missing orderID");
@@ -34,7 +34,7 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res, next) => {
   }
 });
 
-//delete order
+//delete order (admin)
 router.delete("/:id", verifyTokenAndAdmin, async (req, res, next) => {
   if (!req.params.id) {
     return res.status(400).json("missing orderID");
@@ -43,6 +43,21 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res, next) => {
   try {
     await Order.findByIdAndDelete(req.params.id);
     res.status(200).json("order deleted");
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
+//get orders for user
+router.get("/find/:userId", verifyTokenAndAuth, async (req, res, next) => {
+  if (!req.params.userId) {
+    return res.status(400).json("missing userID");
+  }
+
+  try {
+    // return array of orders
+    const orders = await Order.find({ userId: req.params.userId });
+    res.status(200).json(orders);
   } catch (err) {
     res.status(500).json(err.message);
   }
