@@ -49,5 +49,17 @@ router.delete("/:id", verifyTokenAndAuth, async (req, res, next) => {
 });
 
 //get user's cart
+router.get("/find/:userId", verifyTokenAndAuth, async (req, res, next) => {
+  if (!req.params.userId) {
+    return res.status(400).json("missing userID");
+  }
+
+  try {
+    const cart = await Cart.findOne({ userId: req.params.userId });
+    res.status(200).json(cart);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
 
 module.exports = router;
