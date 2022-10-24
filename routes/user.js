@@ -74,4 +74,32 @@ router.get("/", verifyTokenAndAdmin, async (req, res, next) => {
   }
 });
 
+//get user stats for given month of current year(only admin has access)
+router.get("/stats", verifyTokenAndAdmin, async (req, res, next) => {
+  const date = new Date();
+  // current date now => current year now => last year => set last year variable
+  const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
+
+  try {
+    const data = await User.aggregate([
+      { $match: { createdAt: { $gte: lastYear } } },
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          total: { $sum: 1 },
+        },
+      },
+    ]);
+
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
 module.exports = router;
