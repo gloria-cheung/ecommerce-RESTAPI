@@ -46,9 +46,24 @@ router.get("/find/:id", verifyTokenAndAdmin, async (req, res, next) => {
     if (!user) {
       return res.status(403).json("user not found");
     }
-    
+
     const { password, ...everythingButPassword } = user._doc;
     res.status(200).json(everythingButPassword);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
+//get all users (only admin has access)
+router.get("/", verifyTokenAndAdmin, async (req, res, next) => {
+  try {
+    const users = await User.find();
+    const usersWithoutPassword = users.map((user) => {
+      const { password, ...other } = user._doc;
+      return other;
+    });
+
+    res.status(200).json(usersWithoutPassword);
   } catch (err) {
     res.status(500).json(err.message);
   }
