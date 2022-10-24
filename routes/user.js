@@ -56,8 +56,13 @@ router.get("/find/:id", verifyTokenAndAdmin, async (req, res, next) => {
 
 //get all users (only admin has access)
 router.get("/", verifyTokenAndAdmin, async (req, res, next) => {
+  const query = req.query.new;
+
   try {
-    const users = await User.find();
+    // check if there is ?new=true and only return most recent 5 users
+    const users = query
+      ? await User.find().sort({ createdAt: "desc" }).limit(5)
+      : await User.find();
     const usersWithoutPassword = users.map((user) => {
       const { password, ...other } = user._doc;
       return other;
