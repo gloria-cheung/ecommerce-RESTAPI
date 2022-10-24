@@ -1,6 +1,6 @@
 # E-Commerce REST API
 
-An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB that helps client to integrate User Authentication and ... in their application.
+An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB that helps client to integrate user authentication, inventory management and purchasing functionality in their application.
 
 ## Setup
 
