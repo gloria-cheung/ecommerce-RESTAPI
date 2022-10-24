@@ -12,4 +12,26 @@ router.post("/", verifyToken, async (req, res, next) => {
   }
 });
 
+//update order
+router.put("/:id", verifyTokenAndAdmin, async (req, res, next) => {
+  if (!req.params.id) {
+    return res.status(400).json("missing orderID");
+  }
+
+  // set new:true in order to return back the updated version
+  try {
+    const updatedOrder = await Order.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
+
+    res.status(200).json(updatedOrder);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
 module.exports = router;
