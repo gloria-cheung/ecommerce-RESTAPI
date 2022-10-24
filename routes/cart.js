@@ -9,7 +9,7 @@ const {
 //create cart
 router.post("/", verifyToken, async (req, res, next) => {
   try {
-    const newCart = Cart.create(req.body);
+    const newCart = await Cart.create(req.body);
     res.status(201).json(newCart);
   } catch (err) {
     res.status(500).json(err.message);
