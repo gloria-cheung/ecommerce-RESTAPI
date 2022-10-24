@@ -29,4 +29,14 @@ const verifyTokenAndAuth = (req, res, next) => {
   });
 };
 
-module.exports = { verifyToken, verifyTokenAndAuth };
+const verifyTokenAndAdmin = (req, res, next) => {
+  verifyToken(req, res, () => {
+    if (req.user.isAdmin) {
+      next();
+    } else {
+      return res.status(403).json("you don't have access");
+    }
+  });
+};
+
+module.exports = { verifyToken, verifyTokenAndAuth, verifyTokenAndAdmin };
