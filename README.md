@@ -5,7 +5,8 @@ An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB that he
 ## Setup
 
 - Create account on [MongoDB](https://www.mongodb.com/cloud/atlas/register), create project and set up database cluster
-- Set up .env file using .env.example file
+- Create account on [Stripe](https://www.stripe.com), go to developers, then API keys
+- Set up .env file using .env.example file for stripe secret key and mongodb url
 - Navigate to root and install dependencies with `npm install`
 - Server is running on http://localhost:1234
 
@@ -431,6 +432,24 @@ An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB that he
     [{"_id":8,"income":200},
     {"_id":10,"income":185}]
 
+## Stripe Payment
+
+### Request
+
+`POST /api/checkout/payment`
+
+    from client side
+
+### Response
+
+    HTTP/1.1 200 OK
+    Date: Mon, 24 Oct 2022 16:26:24 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+
+    {stripeData}
+
 ## Project Stack
 
 - Back-End: Express, Node.js, MongoDB, Mongoose
@@ -445,6 +464,8 @@ An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB that he
 - morgan
 - nodemon
 - jsonwebtoken
+- stripe
+- cors
 
 ## Connect With Me
 
