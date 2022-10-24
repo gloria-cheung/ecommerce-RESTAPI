@@ -1,6 +1,10 @@
 const router = require("express").Router();
 const Order = require("../models/Order");
-const { verifyToken, verifyTokenAndAdmin, verifyTokenAndAuth } = require("./verifyToken");
+const {
+  verifyToken,
+  verifyTokenAndAdmin,
+  verifyTokenAndAuth,
+} = require("./verifyToken");
 
 //create order
 router.post("/", verifyToken, async (req, res, next) => {
@@ -49,15 +53,55 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res, next) => {
 });
 
 //get orders for user
-router.get("/find/:userId", verifyTokenAndAuth, async (req, res, next) => {
-  if (!req.params.userId) {
+router.get("/find/:id", verifyTokenAndAuth, async (req, res, next) => {
+  if (!req.params.id) {
     return res.status(400).json("missing userID");
   }
 
   try {
     // return array of orders
-    const orders = await Order.find({ userId: req.params.userId });
+    const orders = await Order.find({ userId: req.params.id });
     res.status(200).json(orders);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
+//get all orders (admin)
+router.get("/", verifyTokenAndAdmin, async (req, res, next) => {
+  try {
+    const orders = await Order.find();
+    res.status(200).json(orders);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
+//get monthly income stat for last 2 months
+router.get("/stats", verifyTokenAndAdmin, async (req, res, next) => {
+  const date = new Date();
+  // current date now => current month now => last month => set last month variable, then repeat to find previous month
+  const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
+  const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
+
+  try {
+    const data = await Order.aggregate([
+      { $match: { createdAt: { $gte: previousMonth } } },
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+          sales: "$amount",
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          income: { $sum: "$sales" },
+        },
+      },
+    ]);
+
+    res.status(200).json(data);
   } catch (err) {
     res.status(500).json(err.message);
   }
