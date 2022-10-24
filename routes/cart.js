@@ -13,6 +13,27 @@ router.post("/", verifyToken, async (req, res, next) => {
 });
 
 //update cart
+router.put("/:id", verifyTokenAndAuth, async (req, res, next) => {
+  if (!req.params.id) {
+    return res.status(400).json("missing cartID");
+  }
+
+  // set new:true in order to return back the updated version
+  try {
+    const updatedCart = await Cart.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
+
+    res.status(200).json(updatedCart);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
 //delete cart
 //get cart
 
