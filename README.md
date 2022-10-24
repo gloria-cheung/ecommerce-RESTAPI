@@ -287,7 +287,7 @@ An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB that he
 
 ### Request
 
-`GET /api/carts/find/:userId`
+`GET /api/carts/find/:id`
 
     curl -H "token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNTY5YzA2YmE5NzJkMTg3OTU3NjI2NiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2NjYyMDQzNCwiZXhwIjoxNjY2ODc5NjM0fQ.WUkFRIvU8vJ1zrAKtsxBBvY8tPg_B2tmMJJkPLwoFMg" -H "Content-Type: application/json" -X GET "http://localhost:1234/api/carts/find/63569bf5ba972d1879576264"
 
@@ -319,6 +319,117 @@ An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB that he
 
     [{"_id":"6356c7af8a4c82ce897f5ad5","userId":"63569bf5ba972d1879576264","products":[{"productId":"6356b52fb4fda0fe2be02f8a","quantity":1,"_id":"6356c9928a4c82ce897f5ada"}],"createdAt":"2022-10-24T17:13:19.251Z","updatedAt":"2022-10-24T17:21:22.584Z","__v":0},
     ...]
+
+## Create a New Order
+
+### Request
+
+`POST /api/orders/`
+
+    curl -d '{"userId":"63569bf5ba972d1879576264", "amount": 100, "address": {}}' -H "token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNTY5YmY1YmE5NzJkMTg3OTU3NjI2NCIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2NjY2MzEzNjEsImV4cCI6MTY2Njg5MDU2MX0.LYz4aK4ippqU9GmDowpSChuUsVbbIBq_ZbJcuzM2AMo" -H "Content-Type: application/json" -X POST "http://localhost:1234/api/orders/"
+
+### Response
+
+    HTTP/1.1 201 Created
+    Date: Mon, 24 Oct 2022 16:12:41 GMT
+    Status: 201 Created
+    Connection: close
+    Content-Type: application/json
+
+    {"userId":"63569bf5ba972d1879576264","amount":100,"status":"pending","_id":"6356e747b161661749e4fc0b","products":[],"createdAt":"2022-10-24T19:28:07.493Z","updatedAt":"2022-10-24T19:28:07.493Z","__v":0}
+
+## Update Order
+
+### Request
+
+`PUT /api/orders/:id`
+
+    curl -d '{"products":[{"productId":"6356b52fb4fda0fe2be02f8a", "qty": 1}]}' -H "token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNTY5YzA2YmE5NzJkMTg3OTU3NjI2NiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2NjYyMDQzNCwiZXhwIjoxNjY2ODc5NjM0fQ.WUkFRIvU8vJ1zrAKtsxBBvY8tPg_B2tmMJJkPLwoFMg" -H "Content-Type: application/json" -X PUT "http://localhost:1234/api/orders/6356e747b161661749e4fc0b"
+
+### Response
+
+    HTTP/1.1 200 OK
+    Date: Mon, 24 Oct 2022 16:12:41 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+
+    {"_id":"6356e747b161661749e4fc0b","userId":"63569bf5ba972d1879576264","amount":100,"status":"pending","products":[{"productId":"6356b52fb4fda0fe2be02f8a","quantity":1,"_id":"6356e77bb161661749e4fc0d"}],"createdAt":"2022-10-24T19:28:07.493Z","updatedAt":"2022-10-24T19:28:59.828Z","__v":0}
+
+## Delete Order
+
+### Request
+
+`DELETE /api/orders/:id`
+
+    curl -H "token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNTY5YzA2YmE5NzJkMTg3OTU3NjI2NiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2NjYyMDQzNCwiZXhwIjoxNjY2ODc5NjM0fQ.WUkFRIvU8vJ1zrAKtsxBBvY8tPg_B2tmMJJkPLwoFMg" -H "Content-Type: application/json" -X DELETE "http://localhost:1234/api/orders/6356e747b161661749e4fc0b"
+
+### Response
+
+    HTTP/1.1 200 OK
+    Date: Thu, 15 Oct 2022 16:26:24 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+
+    "order deleted"
+
+## Get Orders for User
+
+### Request
+
+`GET /api/carts/find/:id`
+
+    curl -H "token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNTY5YzA2YmE5NzJkMTg3OTU3NjI2NiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2NjYyMDQzNCwiZXhwIjoxNjY2ODc5NjM0fQ.WUkFRIvU8vJ1zrAKtsxBBvY8tPg_B2tmMJJkPLwoFMg" -H "Content-Type: application/json" -X GET "http://localhost:1234/api/orders/find/63569bf5ba972d1879576264"
+
+### Response
+
+    HTTP/1.1 200 OK
+    Date: Mon, 24 Oct 2022 14:06:45 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+
+    [{"_id":"6356cfe9f305f1b7dfbfbbe0","userId":"63569bf5ba972d1879576264","amount":85,"status":"pending","products":[],"createdAt":"2022-10-24T17:48:25.760Z","updatedAt":"2022-10-24T17:48:25.760Z","__v":0},{"_id":"6356cffaf305f1b7dfbfbbe2","userId":"63569bf5ba972d1879576264","amount":100,"status":"pending","products":[],"createdAt":"2022-08-30T17:48:42.760Z","updatedAt":"2022-10-24T17:48:42.760Z","__v":0},
+    ...]
+
+## Get All Orders (admin)
+
+### Request
+
+`GET /api/orders/`
+
+    curl -H "token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNTY5YzA2YmE5NzJkMTg3OTU3NjI2NiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2NjYyMDQzNCwiZXhwIjoxNjY2ODc5NjM0fQ.WUkFRIvU8vJ1zrAKtsxBBvY8tPg_B2tmMJJkPLwoFMg" -H "Content-Type: application/json" -X GET "http://localhost:1234/api/orders/"
+
+### Response
+
+    HTTP/1.1 200 OK
+    Date: Mon, 24 Oct 2022 16:26:24 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+
+    [{"_id":"6356cfe9f305f1b7dfbfbbe0","userId":"63569bf5ba972d1879576264","amount":85,"status":"pending","products":[],"createdAt":"2022-10-24T17:48:25.760Z","updatedAt":"2022-10-24T17:48:25.760Z","__v":0},{"_id":"6356cffaf305f1b7dfbfbbe2","userId":"63569bf5ba972d1879576264","amount":100,"status":"pending","products":[],"createdAt":"2022-08-30T17:48:42.760Z","updatedAt":"2022-10-24T17:48:42.760Z","__v":0},
+    ...]
+
+## Get Order Stats (admin)
+
+### Request
+
+`GET /api/orders/stats`
+
+    curl -H "Content-Type: application/json" -H "token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNTY5YzA2YmE5NzJkMTg3OTU3NjI2NiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2NjYyMDQzNCwiZXhwIjoxNjY2ODc5NjM0fQ.WUkFRIvU8vJ1zrAKtsxBBvY8tPg_B2tmMJJkPLwoFMg" -X GET "http://localhost:1234/api/orders/stats"
+
+### Response
+
+    HTTP/1.1 200 OK
+    Date: Mon, 24 Oct 2022 16:26:24 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+
+    [{"_id":8,"income":200},
+    {"_id":10,"income":185}]
 
 ## Project Stack
 
